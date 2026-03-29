@@ -26,22 +26,30 @@ app = FastAPI(
 # -----------------------------
 
 class BookCreate(BaseModel):
+    book_code: str
     title: str
     author: str
     category: str
+    publisher: str
     isbn: str
     published_year: Optional[int] = None
+    total_copies: int
     available_copies: int = 1
-    status: str = "available"
+    shelf_location: str
+    status: str = "Available"
 
 
 class BookUpdate(BaseModel):
+    book_code: Optional[str] = None
     title: Optional[str] = None
     author: Optional[str] = None
     category: Optional[str] = None
+    publisher: Optional[str] = None
     isbn: Optional[str] = None
     published_year: Optional[int] = None
+    total_copies: Optional[int] = None
     available_copies: Optional[int] = None
+    shelf_location: Optional[str] = None
     status: Optional[str] = None
 
 
@@ -67,12 +75,26 @@ class BorrowingCreate(BaseModel):
     book_id: int
     borrow_date: Optional[str] = None
     due_date: Optional[str] = None
+    return_date: Optional[str] = None
     status: str = "borrowed"
 
 
 class BorrowingUpdate(BaseModel):
+    member_id: Optional[int] = None
+    book_id: Optional[int] = None
+    borrow_date: Optional[str] = None
+    due_date: Optional[str] = None
     return_date: Optional[str] = None
     status: Optional[str] = None
+
+class BorrowingResponse(BaseModel):
+    borrowing_id: int
+    member_id: int
+    book_id: int
+    borrow_date: Optional[str] = None
+    due_date: Optional[str] = None
+    return_date: Optional[str] = None
+    status: str
 
 
 class ReservationCreate(BaseModel):
@@ -83,7 +105,18 @@ class ReservationCreate(BaseModel):
 
 
 class ReservationUpdate(BaseModel):
+    member_id: Optional[int] = None
+    book_id: Optional[int] = None
+    reservation_date: Optional[str] = None
     status: Optional[str] = None
+
+
+class ReservationResponse(BaseModel):
+    reservation_id: int
+    member_id: int
+    book_id: int
+    reservation_date: Optional[str] = None
+    status: str
 
 
 # -----------------------------
