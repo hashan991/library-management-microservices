@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr
+import re
+from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from datetime import datetime
 
@@ -10,6 +11,14 @@ class MemberCreate(BaseModel):
     address: Optional[str] = None
     role: str = "member"
 
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, value: str):
+        value = value.strip()
+        if not re.fullmatch(r"^\+?[0-9]+$", value):
+            raise ValueError("Phone number must contain only digits and an optional '+' sign")
+        return value
+
 
 class MemberUpdate(BaseModel):
     name: Optional[str] = None
@@ -18,6 +27,16 @@ class MemberUpdate(BaseModel):
     address: Optional[str] = None
     role: Optional[str] = None
     status: Optional[str] = None
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, value: Optional[str]):
+        if value is None:
+            return value
+        value = value.strip()
+        if not re.fullmatch(r"^\+?[0-9]+$", value):
+            raise ValueError("Phone number must contain only digits and an optional '+' sign")
+        return value
 
 
 class MemberResponse(BaseModel):
